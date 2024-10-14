@@ -25,3 +25,14 @@ describe("/api/topics", () => {
       });
   });
 });
+
+describe("/api", () => {
+  test("GET: 200, responds with a list of available API endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).not.toBe(0);
+      });
+  });
+});
