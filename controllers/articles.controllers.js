@@ -15,7 +15,9 @@ function getArticleById(request, response, next) {
 
 function getArticles(request, response) {
   fetchArticles().then((articles) => {
-    response.status(200).send({ articles: articles.rows });
+
+    response.status(200).send({ articles });
+
   });
 }
 
