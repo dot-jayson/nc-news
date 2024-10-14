@@ -7,7 +7,7 @@ function fetchArticleById(id) {
       if (article.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Article does not exist" });
       }
-      return article;
+      return article.rows;
     });
 }
 
@@ -31,7 +31,7 @@ function fetchArticles() {
     `
     )
     .then((articles) => {
-      return articles;
+      return articles.rows;
     });
 }
 module.exports = { fetchArticleById, fetchArticles };
