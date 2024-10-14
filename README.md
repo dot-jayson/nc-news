@@ -2,5 +2,5 @@ This portfolio project was created as part of a Digital Skills Bootcamp in Softw
 
 App setup -
 
-1. Create a .env.development file and create an environment variable PGDATABASE giving it the
-   name of the database you wish to connect to
+1. Create an .env.test file and include PGDATABASE=nc_news_test
+2. Create an .env.development file and include PGDATABASE=nc_news
