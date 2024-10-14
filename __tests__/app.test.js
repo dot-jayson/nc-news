@@ -38,7 +38,7 @@ describe("/api", () => {
 });
 
 describe("/api/articles/:article_id", () => {
-  test("GET: 20, responds with corresponding article object when given an article_id", () => {
+  test("GET: 200, responds with corresponding article object when given an article_id", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
@@ -54,6 +54,22 @@ describe("/api/articles/:article_id", () => {
         expect(article[0].article_img_url).toBe(
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
+      });
+  });
+  test("GET: 400, responds with appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/potato")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET: 404, responds with appropriate status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article does not exist");
       });
   });
 });
