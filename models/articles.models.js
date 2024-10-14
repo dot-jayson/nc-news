@@ -31,7 +31,7 @@ function fetchArticles() {
     `
     )
     .then((articles) => {
-      return articles;
+      return articles.rows;
     });
 }
 module.exports = { fetchArticleById, fetchArticles };
