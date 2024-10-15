@@ -98,8 +98,50 @@ describe("/api/articles", () => {
   });
 });
 
-// describe("/api/articles/:article_id/comments", () => {
-//   test("GET: 200, responds with an array of comments for the given article_id, sorted by the most recent comments first", () => {
-//     return request(app).get("/api/articles/1/comments").expect(200);
-//   });
-// });
+
+describe("/api/articles/:article_id/comments", () => {
+  test("GET: 200, responds with an array of comments for the given article id, sorted by most recent comments first", () => {
+    return request(app)
+      .get("/api/articles/9/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toBe(2);
+        body.comments.forEach((comment) => {
+          expect(typeof comment.comment_id).toBe("number");
+          expect(typeof comment.votes).toBe("number");
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.author).toBe("string");
+          expect(typeof comment.body).toBe("string");
+          expect(typeof comment.article_id).toBe("number");
+        });
+      });
+  });
+  test("GET: 400, responds with appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/potato/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET: 404, responds with appropriate status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article does not exist");
+      });
+  });
+  test("GET: 200, responds with an empty array when passed a article_id that is present in the database but has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.comments)).toBe(true);
+        expect(body.comments.length).toBe(0);
+      });
+  });
+});
+
+
+
