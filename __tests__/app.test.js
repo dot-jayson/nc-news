@@ -98,7 +98,6 @@ describe("/api/articles", () => {
   });
 });
 
-
 describe("/api/articles/:article_id/comments", () => {
   test("GET: 200, responds with an array of comments for the given article id, sorted by most recent comments first", () => {
     return request(app)
@@ -141,7 +140,44 @@ describe("/api/articles/:article_id/comments", () => {
         expect(body.comments.length).toBe(0);
       });
   });
+  test("POST: 201, responds with the posted comment, accepting an object with username and body properties", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "testing testing 123",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment.author).toBe("butter_bridge");
+        expect(body.comment.body).toBe("testing testing 123");
+      });
+  });
+  test("POST: 400, responds with appropriate status and error message when trying to post on a invalid article id", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "testing testing 123",
+    };
+    return request(app)
+      .post("/api/articles/potato/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("POST: 404, responds with appropriate status and error message when trying to post on a valid but non-existent id", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "testing testing 123",
+    };
+    return request(app)
+      .post("/api/articles/666/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article does not exist");
+      });
+  });
 });
-
-
-

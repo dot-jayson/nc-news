@@ -1,6 +1,8 @@
-
 const { fetchArticleById } = require("../models/articles.models");
-const { fetchCommmentsByArticleId } = require("../models/comments.models");
+const {
+  fetchCommmentsByArticleId,
+  insertComment,
+} = require("../models/comments.models");
 
 function getCommentsbyArticleId(request, response, next) {
   const { article_id } = request.params;
@@ -17,7 +19,25 @@ function getCommentsbyArticleId(request, response, next) {
     .catch((err) => {
       next(err);
     });
-
 }
 
-module.exports = { getCommentsbyArticleId };
+function postComment(request, response, next) {
+  const { article_id } = request.params;
+  const newComment = request.body;
+
+  const promises = [
+    fetchArticleById(article_id),
+    insertComment(newComment, article_id),
+  ];
+
+  Promise.all(promises)
+    .then((results) => {
+      const comment = results[1];
+      response.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getCommentsbyArticleId, postComment };

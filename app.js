@@ -8,9 +8,12 @@ const {
 } = require("./controllers/articles.controllers");
 const {
   getCommentsbyArticleId,
+  postComment,
 } = require("./controllers/comments.controllers");
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
@@ -23,6 +26,8 @@ app.get("/api", (request, response) => {
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsbyArticleId);
+
+app.post("/api/articles/:article_id/comments", postComment);
 
 app.use((err, request, response, next) => {
   if (err.code === "22P02") {
@@ -41,7 +46,7 @@ app.use((err, request, response, next) => {
 // Unhandled errors
 app.use((err, request, response, next) => {
   const unhandledError = err;
-  //   console.log({ unhandledError });
+  // console.log({ unhandledError });
   response.status(500).send({ msg: "500 server error" });
 });
 
