@@ -1,7 +1,6 @@
 const db = require("../db/connection");
 
 function fetchCommmentsByArticleId(id) {
-
   return db
     .query(
       `
@@ -24,7 +23,22 @@ function fetchCommmentsByArticleId(id) {
     .then((comments) => {
       return comments.rows;
     });
-
 }
 
-module.exports = { fetchCommmentsByArticleId };
+function insertComment({ username, body }, id) {
+  return db
+    .query(
+      `
+    INSERT INTO 
+      comments (author, body, article_id)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+      `,
+      [username, body, id]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+}
+
+module.exports = { fetchCommmentsByArticleId, insertComment };
