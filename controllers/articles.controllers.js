@@ -1,6 +1,7 @@
 const {
   fetchArticleById,
   fetchArticles,
+  updateArticleVotes,
 } = require("../models/articles.models");
 
 function getArticleById(request, response, next) {
@@ -19,4 +20,22 @@ function getArticles(request, response) {
   });
 }
 
-module.exports = { getArticleById, getArticles };
+function patchArticle(request, response, next) {
+  const { inc_votes } = request.body;
+  const { article_id } = request.params;
+
+  const promises = [
+    fetchArticleById(article_id),
+    updateArticleVotes(inc_votes, article_id),
+  ];
+  Promise.all(promises)
+    .then((results) => {
+      const updatedArticle = results[1];
+      response.status(200).send({ updatedArticle });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getArticleById, getArticles, patchArticle };

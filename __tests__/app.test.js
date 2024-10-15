@@ -72,6 +72,54 @@ describe("/api/articles/:article_id", () => {
         expect(response.body.msg).toBe("Article does not exist");
       });
   });
+  test("PATCH: 200, updates an article votes by article id, responding with the updated article", () => {
+    const votes = {
+      inc_votes: 5,
+    };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votes)
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedArticle } = body;
+        expect(updatedArticle.article_id).toBe(1);
+        expect(updatedArticle.title).toBe(
+          "Living in the shadow of a great man"
+        );
+        expect(updatedArticle.topic).toBe("mitch");
+        expect(updatedArticle.author).toBe("butter_bridge");
+        expect(updatedArticle.body).toBe("I find this existence challenging");
+        expect(updatedArticle.created_at).toBe("2020-07-09T20:11:00.000Z");
+        expect(updatedArticle.votes).toBe(105);
+        expect(updatedArticle.article_img_url).toBe(
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+      });
+  });
+  test("PATCH 400: responds with appropriate status and error message when given an invalid id", () => {
+    const votes = {
+      inc_votes: 5,
+    };
+    return request(app)
+      .patch("/api/articles/potato")
+      .send(votes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("PATCH 400: responds with appropriate status and error message when given an invalid id", () => {
+    const votes = {
+      inc_votes: 5,
+    };
+    return request(app)
+      .patch("/api/articles/5000")
+      .send(votes)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article does not exist");
+      });
+  });
 });
 
 describe("/api/articles", () => {

@@ -5,6 +5,7 @@ const endpoints = require("./endpoints.json");
 const {
   getArticleById,
   getArticles,
+  patchArticle,
 } = require("./controllers/articles.controllers");
 const {
   getCommentsbyArticleId,
@@ -28,6 +29,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsbyArticleId);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/articles/:article_id", patchArticle);
 
 app.use((err, request, response, next) => {
   if (err.code === "22P02") {
