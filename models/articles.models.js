@@ -7,7 +7,7 @@ function fetchArticleById(id) {
       if (article.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Article does not exist" });
       }
-      return article.rows;
+      return article.rows[0];
     });
 }
 

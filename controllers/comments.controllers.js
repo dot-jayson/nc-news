@@ -1,3 +1,4 @@
+
 const { fetchArticleById } = require("../models/articles.models");
 const { fetchCommmentsByArticleId } = require("../models/comments.models");
 
@@ -16,6 +17,7 @@ function getCommentsbyArticleId(request, response, next) {
     .catch((err) => {
       next(err);
     });
+
 }
 
 module.exports = { getCommentsbyArticleId };

@@ -1,6 +1,7 @@
 const db = require("../db/connection");
 
 function fetchCommmentsByArticleId(id) {
+
   return db
     .query(
       `
@@ -23,6 +24,7 @@ function fetchCommmentsByArticleId(id) {
     .then((comments) => {
       return comments.rows;
     });
+
 }
 
 module.exports = { fetchCommmentsByArticleId };
