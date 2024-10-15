@@ -115,4 +115,20 @@ describe("/api/articles/:article_id/comments", () => {
         });
       });
   });
+  test("GET: 400, responds with appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/potato/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET: 404, responds with appropriate status and error message when given a valid but non-existent id", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article does not exist");
+      });
+  });
 });
