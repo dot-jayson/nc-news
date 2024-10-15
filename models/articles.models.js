@@ -34,4 +34,20 @@ function fetchArticles() {
       return articles.rows;
     });
 }
-module.exports = { fetchArticleById, fetchArticles };
+
+function updateArticleVotes(votes, id) {
+  return db
+    .query(
+      `
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *;
+    `,
+      [votes, id]
+    )
+    .then((updatedArticle) => {
+      return updatedArticle.rows[0];
+    });
+}
+module.exports = { fetchArticleById, fetchArticles, updateArticleVotes };
