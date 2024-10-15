@@ -131,4 +131,13 @@ describe("/api/articles/:article_id/comments", () => {
         expect(response.body.msg).toBe("Article does not exist");
       });
   });
+  test("GET: 200, responds with an empty array when passed a article_id that is present in the database but has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.comments)).toBe(true);
+        expect(body.comments.length).toBe(0);
+      });
+  });
 });
