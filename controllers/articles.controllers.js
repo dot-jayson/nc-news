@@ -20,11 +20,17 @@ function getArticles(request, response) {
   });
 }
 
-function patchArticle(request, response) {
+function patchArticle(request, response, next) {
   const { inc_votes } = request.body;
   const { article_id } = request.params;
-  updateArticleVotes(inc_votes, article_id)
-    .then((updatedArticle) => {
+
+  const promises = [
+    fetchArticleById(article_id),
+    updateArticleVotes(inc_votes, article_id),
+  ];
+  Promise.all(promises)
+    .then((results) => {
+      const updatedArticle = results[1];
       response.status(200).send({ updatedArticle });
     })
     .catch((err) => {

@@ -96,6 +96,30 @@ describe("/api/articles/:article_id", () => {
         );
       });
   });
+  test("PATCH 400: responds with appropriate status and error message when given an invalid id", () => {
+    const votes = {
+      inc_votes: 5,
+    };
+    return request(app)
+      .patch("/api/articles/potato")
+      .send(votes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("PATCH 400: responds with appropriate status and error message when given an invalid id", () => {
+    const votes = {
+      inc_votes: 5,
+    };
+    return request(app)
+      .patch("/api/articles/5000")
+      .send(votes)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article does not exist");
+      });
+  });
 });
 
 describe("/api/articles", () => {
