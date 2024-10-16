@@ -14,10 +14,14 @@ function getArticleById(request, response, next) {
     });
 }
 
-function getArticles(request, response) {
-  fetchArticles().then((articles) => {
-    response.status(200).send({ articles });
-  });
+function getArticles(request, response, next) {
+  fetchArticles(request.query.sort_by, request.query.order)
+    .then((articles) => {
+      response.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 function patchArticle(request, response, next) {
