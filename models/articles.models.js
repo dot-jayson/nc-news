@@ -11,7 +11,7 @@ function fetchArticleById(id) {
     });
 }
 
-function fetchArticles(sort_by = "created_at", order = "desc") {
+function fetchArticles(sort_by = "created_at", order = "desc", topic) {
   const validSortBys = [
     "author",
     "title",
@@ -41,13 +41,20 @@ function fetchArticles(sort_by = "created_at", order = "desc") {
     articles.article_img_url,
     COUNT(comments.comment_id) AS comment_count
   FROM articles
-  LEFT JOIN comments ON articles.article_id = comments.article_id
-  GROUP by articles.article_id
+  LEFT JOIN comments ON articles.article_id = comments.article_id 
   `;
 
-  queryString += ` ORDER BY ${sort_by} ${order}`;
+  if (topic) {
+    queryString += ` WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryString += ` GROUP by articles.article_id ORDER BY ${sort_by} ${order}`;
 
   return db.query(queryString, queryValues).then((articles) => {
+    if (articles.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Not found" });
+    }
     return articles.rows;
   });
 }
