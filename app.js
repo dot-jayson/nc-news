@@ -10,6 +10,7 @@ const {
 const {
   getCommentsbyArticleId,
   postComment,
+  deleteComment,
 } = require("./controllers/comments.controllers");
 
 const app = express();
@@ -32,6 +33,8 @@ app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", patchArticle);
 
+app.delete("/api/comments/:comment_id", deleteComment);
+
 app.use((err, request, response, next) => {
   if (err.code === "22P02") {
     response.status(400).send({ msg: "Bad request" });
@@ -48,8 +51,8 @@ app.use((err, request, response, next) => {
 
 // Unhandled errors
 app.use((err, request, response, next) => {
-  const unhandledError = err;
-  // console.log({ unhandledError });
+  // const unhandledError = err;
+  console.log({ unhandledError });
   response.status(500).send({ msg: "500 server error" });
 });
 
