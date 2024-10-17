@@ -44,19 +44,29 @@ function fetchArticles(sort_by = "created_at", order = "desc", topic) {
   LEFT JOIN comments ON articles.article_id = comments.article_id 
   `;
 
-  if (topic) {
-    queryString += ` WHERE topic = $1`;
-    queryValues.push(topic);
-  }
+  return db
+    .query(
+      `
+    SELECT
+    DISTINCT slug
+    FROM topics
+    `
+    )
+    .then((results) => {
+      const validTopics = results.rows.map((result) => result.slug);
+      if (topic) {
+        if (!validTopics.includes(topic)) {
+          return Promise.reject({ status: 404, msg: "Not found" });
+        }
+        queryString += ` WHERE topic = $1`;
+        queryValues.push(topic);
+      }
+      queryString += ` GROUP by articles.article_id ORDER BY ${sort_by} ${order}`;
 
-  queryString += ` GROUP by articles.article_id ORDER BY ${sort_by} ${order}`;
-
-  return db.query(queryString, queryValues).then((articles) => {
-    if (articles.rows.length === 0) {
-      return Promise.reject({ status: 404, msg: "Not found" });
-    }
-    return articles.rows;
-  });
+      return db.query(queryString, queryValues).then((articles) => {
+        return articles.rows;
+      });
+    });
 }
 
 function updateArticleVotes(votes, id) {

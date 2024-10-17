@@ -206,6 +206,15 @@ describe("/api/articles", () => {
         });
       });
   });
+  test("GET:200, responds with empty array when given topic that exist but has no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.articles)).toBe(true);
+        expect(body.articles.length).toBe(0);
+      });
+  });
   test("GET:404, responds with not found when given valid but non existent topic query", () => {
     return request(app)
       .get("/api/articles?topic=bob")
