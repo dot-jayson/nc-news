@@ -87,8 +87,10 @@ function updateArticleVotes(votes, id) {
     `,
       [votes, id]
     )
+
     .then((updatedArticle) => {
       return updatedArticle.rows[0];
+
     });
 }
 module.exports = { fetchArticleById, fetchArticles, updateArticleVotes };
