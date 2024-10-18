@@ -3,6 +3,7 @@ const {
   fetchCommmentsByArticleId,
   insertComment,
   removeCommentById,
+  updateCommentVotes,
 } = require("../models/comments.models");
 
 function getCommentsbyArticleId(request, response, next) {
@@ -52,4 +53,18 @@ function deleteComment(request, response, next) {
     });
 }
 
-module.exports = { getCommentsbyArticleId, postComment, deleteComment };
+function patchComment(request, response, next) {
+  const { inc_votes } = request.body;
+  const { comment_id } = request.params;
+
+  updateCommentVotes(inc_votes, comment_id).then((updatedComment) => {
+    response.status(200).send({ updatedComment });
+  });
+}
+
+module.exports = {
+  getCommentsbyArticleId,
+  postComment,
+  deleteComment,
+  patchComment,
+};

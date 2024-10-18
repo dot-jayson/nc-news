@@ -62,8 +62,27 @@ function removeCommentById(id) {
     });
 }
 
+function updateCommentVotes(votes, id) {
+  return db
+    .query(
+      `
+    UPDATE comments
+    SET votes = votes + $1
+    WHERE comment_id = $2
+    RETURNING *`,
+      [votes, id]
+    )
+    .then((updatedComment) => {
+      if (updatedComment.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Comment does not exist" });
+      }
+      return updatedComment.rows[0];
+    });
+}
+
 module.exports = {
   fetchCommmentsByArticleId,
   insertComment,
   removeCommentById,
+  updateCommentVotes,
 };
