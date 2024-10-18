@@ -387,6 +387,66 @@ describe("/api/comments/:comment_id", () => {
       });
   });
 });
+test("PATCH: 200, updates an comment by comment id, responding with the updated comment incremented", () => {
+  const votes = {
+    inc_votes: 1,
+  };
+  return request(app)
+    .patch("/api/comments/1")
+    .send(votes)
+    .expect(200)
+    .then(({ body }) => {
+      const { updatedComment } = body;
+      expect(updatedComment.body).toBe(
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+      );
+      expect(updatedComment.votes).toBe(17);
+      expect(updatedComment.author).toBe("butter_bridge");
+      expect(updatedComment.article_id).toBe(9);
+      expect(updatedComment.created_at).toBe("2020-04-06T12:17:00.000Z");
+    });
+});
+test("PATCH: 200, updates an comment by comment id, responding with the updated comment decremented", () => {
+  const votes = {
+    inc_votes: -7,
+  };
+  return request(app)
+    .patch("/api/comments/1")
+    .send(votes)
+    .expect(200)
+    .then(({ body }) => {
+      const { updatedComment } = body;
+      expect(updatedComment.body).toBe(
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+      );
+      expect(updatedComment.votes).toBe(9);
+      expect(updatedComment.author).toBe("butter_bridge");
+      expect(updatedComment.article_id).toBe(9);
+      expect(updatedComment.created_at).toBe("2020-04-06T12:17:00.000Z");
+    });
+});
+test("PATCH: 400 responds with appropriate status and error message when given an invalid id", () => {
+  const votes = {
+    inc_votes: -7,
+  };
+  return request(app)
+    .patch("/api/comments/hello")
+    .send(votes)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request");
+    });
+});
+test("PATCH: 404 responds with appropriate status and error message when given a non existent id", () => {
+  const votes = {
+    inc_votes: -7,
+  };
+  return request(app)
+    .patch("/api/comments/955")
+    .send(votes)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Comment does not exist");
+    });
+});
 describe("/api/users", () => {
   test("GET: 200, responds with an array of all users, with username, name and avatar_url properties", () => {
     return request(app)
