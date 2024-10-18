@@ -57,9 +57,13 @@ function patchComment(request, response, next) {
   const { inc_votes } = request.body;
   const { comment_id } = request.params;
 
-  updateCommentVotes(inc_votes, comment_id).then((updatedComment) => {
-    response.status(200).send({ updatedComment });
-  });
+  updateCommentVotes(inc_votes, comment_id)
+    .then((updatedComment) => {
+      response.status(200).send({ updatedComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 module.exports = {
