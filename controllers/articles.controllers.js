@@ -14,7 +14,6 @@ function getArticleById(request, response, next) {
     });
 }
 
-
 function getArticles(request, response, next) {
   const { sort_by, order, topic } = request.query;
   fetchArticles(sort_by, order, topic)
@@ -42,7 +41,6 @@ function patchArticle(request, response, next) {
     .catch((err) => {
       next(err);
     });
-
 }
 
 module.exports = { getArticleById, getArticles, patchArticle };
