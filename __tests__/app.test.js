@@ -402,3 +402,26 @@ describe("/api/users", () => {
       });
   });
 });
+describe("/api/users/:username", () => {
+  test("GET: 200, responds with the corresponding user object when given a username", () => {
+    return request(app)
+      .get("/api/users/icellusedkars")
+      .expect(200)
+      .then(({ body }) => {
+        const { user } = body;
+        expect(user.username).toBe("icellusedkars");
+        expect(user.avatar_url).toBe(
+          "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+        );
+        expect(user.name).toBe("sam");
+      });
+  });
+  test("GET: 400, responds with appropriate status and error message when given a non existent user", () => {
+    return request(app)
+      .get("/api/users/jayson123")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("User does not exist");
+      });
+  });
+});
