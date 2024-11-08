@@ -55,6 +55,16 @@
       }
     }
   },
+  "PATCH /api/articles/:article_id": {
+    "description": "allows users to increment/decrement vote",
+    "exampleRequest": {
+      "vote": [
+        {
+          "inc_votes": 1
+        }
+      ]
+    }
+  },
   "GET /api/articles/:article_id/comments": {
     "description": "serves array of comments objects when given an article id",
     "queries": [],
@@ -70,6 +80,20 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "allows for posting a comment, requires username and body",
+    "exampleRequest": {
+      "comment": [
+        {
+          "username": "butter_bridge",
+          "body": "this is a comment"
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "allows for deleting a comment by the comment id"
   },
   "GET /api/users/:username": {
     "description": "serves corresponding user object when given a username",
